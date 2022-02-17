@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+                
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/94199/semantic.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        body{
+            font-family: 'Nunito', sans-serif;
+            background:url("images/bg.png");
+        }
+        header{
+            background-color:#ee87b2;
+            
+        }
+        /* width */
+        ::-webkit-scrollbar {
+        width: 20px;
+       
+       
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+        }
+        
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+        background: #ee87b2; 
+        border-radius: 8px;
+        border: 4px solid white;
+    
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+        } 
+    </style>
+<body>
+
+    <div id="app">
+        <header class="">
+          <span class=" ui basic segment tex">SPY4ME<i class="heartbeat icon hearticon"></i></span>
+        </header>
+         <div class="ui divider hidden"></div>
+         <div class="ui divider hidden"></div>
+         <div class="ui divider hidden"></div>
+
+        <div class="ui one column stackable center aligned page grid">
+            <div class="column twelve wide">
+                <h3 class="sinopse">🕵️‍♂️Searching for recent activities from your crush @{{this.username}}
+                </h3>
+              
+            </div>
+         </div>
+         <div class="ui divider hidden"></div>
+         <div class="ui divider hidden"></div>
+
+         <div class="ui active centered inline loader large" id="loader"></div>
+         
+         <div class="ui container" id="general_container">      
+              
+         <div class="ui two column stackable grid">
+            <div class="column ">
+              <div class="ui">
+                <div class="ui centered card raised animation">
+                    <a class="image" href="#">
+                      <img src="https://semantic-ui.com/images/avatar/large/steve.jpg">
+                    </a>
+                    <div class="content">
+                      <a class="header" href="#">Steve Jobs</a>
+                      <div class="meta">
+                        <a>Last login {{this.last_login}}</a>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="column">
+                <div id="chart"></div>
+                
+            </div>
+            <div class="column">
+              
+          </div>
+          
+ 
+        </div>
+
+        <div class="ui container center aligned "></div>
+        
+        <div class="ui two column stackable grid" >
+            <div class="column animation">
+                <div class="ui segment">
+                    <a class="ui red ribbon label">Last Follower</a>
+                    <div class="ui header">{{this.last_follower}}</div>
+                </div>
+            </div>
+            <div class="column animation">
+                <div class="ui segment">
+                    <a class="ui orange  ribbon label">Last Following</a>
+                    <div class="ui header">{{this.last_following}}</div>
+                </div>
+            </div>
+            <div class="column animation">
+                <div class="ui segment">
+                    <a class="ui teal  ribbon label">Follows you ?</a>
+                    <div class="ui header" v-html="this.follows_you ? 'Yep':'Nope'"></div>
+                </div>
+            </div>
+            <div class="column wide three animation">
+                <div class="ui segment">
+                    <a class="ui blue  ribbon label">Last Comment</a>
+                    <div class="ui header">{{this.last_comment}}</div>
+                </div>
+            </div>
+            </div>
+            <div class="ui divider hidden"></div>
+               
+            <h3>Stories</h3>
+
+            <div class="ui four cards">
+                <a v-for="story in this.stories" class="red card">
+                  <div class="image">
+                    <img v-bind:src="story.stories_link">
+                  </div>
+                  <div class="extra">
+                    <i class="play icon"></i>
+                    <div class="ui star rating" data-rating="4"></div>
+                  </div>
+                </a>
+            </div>
+
+              <div class="ui divider hidden"></div>
+              <div class="ui right floated button">
+                Next
+             </div>
+             <div class="ui divider hidden"></div>
+             <div class="ui divider hidden"></div>
+             <div class="ui basic segment center aligned">
+                <span>SPY4ME is not affiliated with Instagram™. We do not host any Instagram content. All rights belong to their respective owners.</span>
+            </div>
+</div>
+    <script>
+        var myObject = new Vue({
+            el: '#app',
+            data: {
+                username:"",
+                is_online : "",
+                profile_pic:"",
+                last_comment:"",
+                last_follower:"",
+                last_following:"",
+                last_login:"",
+                stories:"",
+                name :"",
+                morning:"",
+                afternoon:"",
+                night:"",
+                options:""
+            },
+            mounted(){
+                fetch("https://raw.githubusercontent.com/luizantonioprg/vuejs/main/data.json")
+                .then(response => response.json())
+                .then(data => {
+                    this.name = data.crush_info.name;
+                    this.username = data.crush_info.username;
+                    this.is_online = data.crush_info.is_online;
+                    this.profile_pic = data.crush_info.profile_pic;
+                    this.last_comment = data.crush_info.last_comment;
+                    this.last_follower = data.crush_info.last_follower;
+                    this.last_following = data.crush_info.last_following;
+                    this.last_login = data.crush_info.last_login;
+                    this.stories = data.crush_stories;
+                    this.morning = data.crush_info.online_morning_percentage;
+                    this.afternoon = data.crush_info.online_afternoon_percentage;
+                    this.night = data.crush_info.online_night_percentage;
+                    this.options = {
+                            chart: {
+                                width: '90%',
+                                type: "donut",
+                                
+                            },
+                            dataLabels: {
+                                enabled: true
+                            },
+                            colors:['#D0417D', '#E36298', '#FDE0EC'],
+                            labels: ["Online in morning", "Online in afternoon", "Online at night"],
+                            series: [this.morning,this.afternoon,this.night]
+                        }
+                    })
+             
+                setInterval(function(){
+                    $('.hearticon').transition({
+                        animation  : 'pulse',
+                     });
+                     $('.hearticon').transition({
+                        animation  : 'pulse',
+                     });
+
+                },500);
+
+                $('#general_container').hide();
+                $('#status').hide();
+                setTimeout(() => {
+                    $('.sinopse').html("<h3>What we've found about your crush @"+this.username+" <i class='search icon'></i><br><div id='status' v-if='this.is_online'class='ui red horizontal label'>ONLINE NOW</div></h3>");
+                    $('#loader').hide();
+                 
+                    $('#general_container').show();
+                    $('.animation').transition({
+                        animation  : 'tada',
+                        duration   : '1000',
+                     });
+                    var chart = new ApexCharts(document.querySelector("#chart"), this.options);
+                    chart.render();
+
+                }, 2000);
+             
+
+        
+            }
+        })
+    </script>
+
+</body>
+</html>
