@@ -1,0 +1,15 @@
+{
+    "crush_info":{
+        "username":"John",
+        "is_online":true,
+        "last_comment":"",
+        "last_follower":"",
+        "last_following":"",
+        "last_login":"",
+        "profile_pic":""
+    },
+    
+    "crush_stories":[
+
+    ]
+}
